@@ -72,6 +72,7 @@
             this.Controls.Add(this.input_text);
             this.Name = "Form1";
             this.Text = "Online Translator v0.1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.ResumeLayout(false);
 
         }

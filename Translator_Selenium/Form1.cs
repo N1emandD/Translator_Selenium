@@ -1,14 +1,8 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,71 +10,72 @@ namespace Translator_Selenium
 {
     public partial class Form1 : Form
     {
+
+        IWebDriver driver;
+
+        String otpt;
         public Form1()
         {
             InitializeComponent();
 
-            foreach (var proc in Process.GetProcessesByName("chromedriver"))
-            {
-                proc.Kill();
-            }
-
             this.Icon = new Icon("languages_pq5_icon.ico");
+
+            launch();
+        }
+
+        public async void launch()
+        {
+            //setting arguments for chomedriver (hidding command prompt and browser itself)
+            await Task.Factory.StartNew(() =>
+            {
+                var service = ChromeDriverService.CreateDefaultService();
+                service.HideCommandPromptWindow = true;
+
+                var options = new ChromeOptions();
+                options.AddArguments("headless");
+
+                driver = new ChromeDriver(service, options);
+                driver.Url = "https://www.deepl.com/ru/translator#ru/en/";
+            });
             
         }
 
         private async void trans_button_Click(object sender, EventArgs e)
         {
-
-            //setting arguments for chomedriver (hidding command prompt and browser itself)
-            var service = ChromeDriverService.CreateDefaultService();
-            service.HideCommandPromptWindow = true;
-
-            var options = new ChromeOptions();
-            options.AddArguments("headless");
-
-            IWebDriver driver = new ChromeDriver(service, options);
+            output_text.Text = "";
 
             //trying to connect to site (limit is 5 seconds)
-            driver.Url = "https://www.deepl.com/ru/translator#ru/en/";
-
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 50; i++)
             {
                 try
                 {
-                    driver.FindElement(By.XPath("//*[@id=\"panelTranslateText\"]/div[1]/div[2]/section[1]/div[3]/div[2]/d-textarea/div/p/br"));
+                    driver.FindElement(By.XPath("//*[@id=\"panelTranslateText\"]/div[1]/div[2]/section[1]/div[3]/div[2]/d-textarea/div/p/br")).SendKeys(input_text.Text);
                     break;
                 }
                 catch
                 {
-                    await Task.Delay(500);
+                    await Task.Delay(100);
                 }
             }
 
-            //putting word in search bar and trying find word
-
-            try
+            //trying to get text from site
+            for (int i = 0; i < 50; i++)
             {
-                driver.FindElement(By.XPath("//*[@id=\"panelTranslateText\"]/div[1]/div[2]/section[1]/div[3]/div[2]/d-textarea/div/p/br")).SendKeys(input_text.Text);
-            }
-            catch
-            {
-                MessageBox.Show("Request time out", "Connection error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            await Task.Delay(1000);
+                otpt = driver.FindElement(By.XPath("//*[@id=\"target-dummydiv\"]")).GetAttribute("textContent");
 
-            try
-            {
-                String otpt = driver.FindElement(By.XPath("//*[@id=\"target-dummydiv\"]")).GetAttribute("textContent");
+                if (char.IsLetter(otpt[0]) && char.IsLetter(otpt[1]))
+                {
+                    output_text.Text = otpt;
+                    break;
+                }
+                else
+                {
+                    await Task.Delay(50);
+                }
 
-                output_text.Text = otpt;
             }
 
-            catch
-            {
-                MessageBox.Show("Не найдено слово, попробуйте еще раз", "Ошибка ввода", MessageBoxButtons.OK);
-            }
-
+            //close chromdriver
             driver.Close();
 
             foreach (var proc in Process.GetProcessesByName("chromedriver"))
@@ -88,6 +83,27 @@ namespace Translator_Selenium
                 proc.Kill();
             }
 
+            launch();
+
+        }
+
+        //closing all chromdriver processes with programm closing
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
+            {
+                driver.Close();
+            }
+            catch
+            {
+                return;
+            }
+
+            foreach (var proc in Process.GetProcessesByName("chromedriver"))
+            {
+                proc.Kill();
+            }
+            
         }
     }
 }
