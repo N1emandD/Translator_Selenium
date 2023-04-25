@@ -36,6 +36,10 @@
             this.submit_butt = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.ocr_detect = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.image_status = new System.Windows.Forms.Label();
+            this.ocr_set_lang = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // input_text
@@ -120,11 +124,46 @@
             this.label2.TabIndex = 7;
             this.label2.Text = "English";
             // 
+            // ocr_detect
+            // 
+            this.ocr_detect.Location = new System.Drawing.Point(70, 66);
+            this.ocr_detect.Name = "ocr_detect";
+            this.ocr_detect.Size = new System.Drawing.Size(209, 34);
+            this.ocr_detect.TabIndex = 8;
+            this.ocr_detect.Text = "OCR";
+            this.ocr_detect.UseVisualStyleBackColor = true;
+            this.ocr_detect.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // image_status
+            // 
+            this.image_status.AutoSize = true;
+            this.image_status.Location = new System.Drawing.Point(68, 103);
+            this.image_status.Name = "image_status";
+            this.image_status.Size = new System.Drawing.Size(0, 13);
+            this.image_status.TabIndex = 9;
+            // 
+            // ocr_set_lang
+            // 
+            this.ocr_set_lang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ocr_set_lang.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ocr_set_lang.FormattingEnabled = true;
+            this.ocr_set_lang.Location = new System.Drawing.Point(70, 31);
+            this.ocr_set_lang.Name = "ocr_set_lang";
+            this.ocr_set_lang.Size = new System.Drawing.Size(209, 29);
+            this.ocr_set_lang.TabIndex = 10;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(670, 394);
+            this.ClientSize = new System.Drawing.Size(659, 353);
+            this.Controls.Add(this.ocr_set_lang);
+            this.Controls.Add(this.image_status);
+            this.Controls.Add(this.ocr_detect);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.submit_butt);
@@ -133,6 +172,7 @@
             this.Controls.Add(this.trans_button);
             this.Controls.Add(this.output_text);
             this.Controls.Add(this.input_text);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
             this.Text = "Online Translator v0.9";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -151,6 +191,10 @@
         private System.Windows.Forms.Button submit_butt;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button ocr_detect;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label image_status;
+        private System.Windows.Forms.ComboBox ocr_set_lang;
     }
 }
 
